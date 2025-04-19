@@ -48,9 +48,9 @@ void insertMap(HashMap * map, char * key, void * value) {
         pos = (pos + 1) % map->capacity; //Se avanza circularmente
     }
 
-    map->buckets[pos] = createPair(key, value); // Inserta el par (clave, valor) en la posición encontrada
-    map->size++; // Incrementa el tamaño del mapa
-    map->current = pos; // Actualiza el índice actual
+    map->buckets[pos] = createPair(key, value); //Inserta el par (clave, valor) en la posición encontrada
+    map->size++; //Incrementa el tamaño del mapa
+    map->current = pos; //Actualiza el índice actual
 }
 
 
@@ -97,8 +97,13 @@ Pair * searchMap(HashMap * map, char * key) {
 }
 
 Pair * firstMap(HashMap * map) {
-
-    return NULL;
+    for (long i = 0; i < map->capacity; i++) {
+        if (map->buckets[i] != NULL && map->buckets[i]->key != NULL) { //Encuentra el primer par valido
+            map->current = i; //Actualiza el indice actual
+            return map->buckets[i]; //Retorna el par
+        }
+    }
+    return NULL; //Si no encuentra pares, retorna NULL
 }
 
 Pair * nextMap(HashMap * map) {
