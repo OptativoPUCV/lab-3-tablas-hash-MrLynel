@@ -73,9 +73,13 @@ HashMap * createMap(long capacity) {
 }
 
 
-void eraseMap(HashMap * map,  char * key) {    
+void eraseMap(HashMap * map, char * key) {
+    Pair * pair = searchMap(map, key); //Se busca el par con la clave
 
-
+    if (pair != NULL) { //En caso de que lo encuentre
+        pair->key = NULL; //Invalida el par (no lo elimina, solo marca la clave como NULL)
+        map->size--; //Decrementa el tamaño
+    }
 }
 
 Pair * searchMap(HashMap * map, char * key) {
