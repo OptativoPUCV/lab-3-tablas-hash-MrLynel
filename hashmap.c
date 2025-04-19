@@ -40,9 +40,19 @@ int is_equal(void* key1, void* key2){
 
 
 void insertMap(HashMap * map, char * key, void * value) {
+    long pos = hash(key, map->capacity); // Aplica la función hash para encontrar la posición
 
+    while (map->buckets[pos] != NULL && map->buckets[pos]->key != NULL) { 
+        // Si la casilla está ocupada y no es NULL, avanzamos a la siguiente casilla (resolución de colisiones)
+        if (is_equal(map->buckets[pos]->key, key)) return; // Si la clave ya existe, no insertamos
+        pos = (pos + 1) % map->capacity; // Avanzamos circularmente
+    }
 
+    map->buckets[pos] = createPair(key, value); // Inserta el par (clave, valor) en la posición encontrada
+    map->size++; // Incrementa el tamaño del mapa
+    map->current = pos; // Actualiza el índice actual
 }
+
 
 void enlarge(HashMap * map) {
     enlarge_called = 1; //no borrar (testing purposes)
@@ -52,12 +62,12 @@ void enlarge(HashMap * map) {
 
 
 HashMap * createMap(long capacity) {
-    HashMap * map = (HashMap *)malloc(sizeof(HashMap)); // Asignar memoria para el mapa
-    if (map == NULL) return NULL; // Verifica si la memoria se reservó correctamente
-    map->buckets = (Pair **)calloc(capacity, sizeof(Pair *)); // Inicializa los buckets con NULL
-    if (map->buckets == NULL) { free(map); return NULL; } // Verifica la reserva de memoria
-    map->size = 0; // Inicializa el tamaño en 0
-    map->capacity = capacity; // Asigna la capacidad
+    HashMap * map = (HashMap *)malloc(sizeof(HashMap)); //Se asigna memoria
+    if (map == NULL) return NULL; //Verifica la asignacion de memoria
+    map->buckets = (Pair **)calloc(capacity, sizeof(Pair *)); //Inicializa los buckets con NULL
+    if (map->buckets == NULL) { free(map); return NULL; } //Verifica la reserva de memoria
+    map->size = 0; //Asigna el tamaño en 0
+    map->capacity = capacity; //Asigna la capacidad
     map->current = -1; // Inicializa el índice
     return map;
 }
