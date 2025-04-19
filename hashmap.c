@@ -40,12 +40,12 @@ int is_equal(void* key1, void* key2){
 
 
 void insertMap(HashMap * map, char * key, void * value) {
-    long pos = hash(key, map->capacity); // Aplica la función hash para encontrar la posición
+    long pos = hash(key, map->capacity); //Se usa función hash para encontrar la posición
 
     while (map->buckets[pos] != NULL && map->buckets[pos]->key != NULL) { 
-        // Si la casilla está ocupada y no es NULL, avanzamos a la siguiente casilla (resolución de colisiones)
-        if (is_equal(map->buckets[pos]->key, key)) return; // Si la clave ya existe, no insertamos
-        pos = (pos + 1) % map->capacity; // Avanzamos circularmente
+        //Si la casilla está ocupada y no es NULL, avanzamos a la siguiente casilla (resolución de colisiones)
+        if (is_equal(map->buckets[pos]->key, key)) return; //Si ya existe la clave, no insertamos
+        pos = (pos + 1) % map->capacity; //Se avanza circularmente
     }
 
     map->buckets[pos] = createPair(key, value); // Inserta el par (clave, valor) en la posición encontrada
@@ -78,10 +78,18 @@ void eraseMap(HashMap * map,  char * key) {
 
 }
 
-Pair * searchMap(HashMap * map,  char * key) {   
+Pair * searchMap(HashMap * map, char * key) {
+    long pos = hash(key, map->capacity); //Usamos funcion hash
 
+    while (map->buckets[pos] != NULL) { //Se busca hasta encontrar un null
+        if (map->buckets[pos]->key != NULL && is_equal(map->buckets[pos]->key, key)) {
+            map->current = pos; //Actualiza indice
+            return map->buckets[pos]; //Si la clave es igual se retorna el par
+        }
+        pos = (pos + 1) % map->capacity; //Avanza circularmente
+    }
 
-    return NULL;
+    return NULL; //NULL si no encuentra la clave
 }
 
 Pair * firstMap(HashMap * map) {
